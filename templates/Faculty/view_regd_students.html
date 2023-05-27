@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Students</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Registered</li>
+                    </ul>
+                    {% include 'includes/messages.html' %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-table">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="table_id" class="table table-hover table-center mb-0">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>E-Mail</th>
+                                    <th>Department</th>
+                                    <th>Route</th>
+                                    <th>Address</th>
+                                    <th>Date of Join</th>
+                                    <th class="text-right">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for i in students %}
+
+                                    <tr>
+                                        <td>{{ i.id }}</td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <a href="" class="avatar avatar-sm mr-2"><img
+                                                        class="avatar-img rounded-circle"
+                                                        src="/{{ i.profile_pic }}" alt="User Image"></a>
+                                                <a href="">{{ i.first_name }}
+                                                    &nbsp; {{ i.last_name }}</a>
+                                            </h2>
+                                        </td>
+                                        <td>{{ i.phone }}</td>
+                                        <td>{{ i.email }}</td>
+                                        <td>{{ i.dept }}</td>
+                                        <td>{{ i.route.start }}&nbsp; {{i.route.end}} </td>
+                                        <td>{{ i.address }}</td>
+                                        <td>{{ i.created_at }}</td>
+                                        <td class="text-right">
+                                            <div class="actions">
+                                                <a href="{% url 'approve_students' i.id %}"
+                                                   class="btn btn-sm bg-success-light mr-2"
+                                                title="Approve">
+                                                    <i class="fas fa-fast-forward"></i>
+                                                </a>
+                                                <a href="{% url 'reject_students' i.id %}"
+                                                   class="btn btn-sm bg-warning-light" title="Reject">
+                                                    <i class="fas fa-ban"></i>
+                                                </a>
+                                                <a href="{% url 'delete_students' i.id %}"
+                                                   class="btn btn-sm bg-danger-light" title="Remove">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card ">
+                <div class="card-body ">
+                    <form method="post" action="{% url 'update_route' %}">
+                        {% csrf_token %}
+                        <div class="col-12">
+                            <h5 class="form-title"><span>Edit Data</span></h5>
+                        </div>
+
+
+                        {% for i in route %}
+                            <div class="col-sm-11">
+                                <div class="form-group">
+                                    <label>Destination</label>
+                                    <input type="text" class="form-control" name="destination" value="{{ i.destination }}">
+                                    <input type="text" class="form-control" name="route_id" value="{{ i.id }}" hidden>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-11">
+                                <div class="form-group">
+                                    <label>Fees</label>
+                                    <input type="number" class="form-control" name="fees" value="{{ i.fees }}">
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                        {% endfor %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,91 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   
+  </head>
+  <body>
+    LIVE TRACKING ON
+
+    <iframe id="mapIframe" width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+    <input type="text" name="latitude" />
+    <input type="text" name="longitude" />
+    <script>
+      setInterval(function(){
+          location.reload();
+      }, 2000); // 2000 milliseconds = 2 seconds
+    </script>
+    <script>
+      window.onload = function() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+          console.log('Geolocation is not supported by this browser.');
+        }
+      }
+      
+      function showPosition(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+      
+        var latitudeFields = document.getElementsByName('latitude');
+        for (var i = 0; i < latitudeFields.length; i++) {
+          latitudeFields[i].value = latitude;
+        }
+      
+        var longitudeFields = document.getElementsByName('longitude');
+        for (var i = 0; i < longitudeFields.length; i++) {
+          longitudeFields[i].value = longitude;
+        }
+      
+        var iframe = document.getElementById('mapIframe');
+        var src = 'https://maps.google.com/maps?q=' + latitude + ',' + longitude + '&z=15&output=embed';
+        iframe.src = src;
+      
+        // Send the latitude and longitude to your view using an AJAX request
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '{% url "driver_update_track_bus" %}', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              console.log('Data sent successfully.');
+            } else {
+              console.log('Error sending data.');
+            }
+          }
+        };
+        var data = {
+          latitude: latitude,
+          longitude: longitude
+        };
+        xhr.send(JSON.stringify(data));
+      }
+      
+      window.onload();
+      
+      function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+          var cookies = document.cookie.split(';');
+          for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+      4
+  </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card ">
+                <div class="card-body ">
+                    <form method="post" action="{% url 'update_bus' %}">
+                        {% csrf_token %}
+                        <div class="col-12">
+                            <h5 class="form-title"><span>Edit Data</span></h5>
+                        </div>
+
+                        {% for i in bus %}
+
+                            <div class="col-sm-11">
+                                <div class="form-group">
+                                    <label>Assign Route</label>
+                                    <input type="text" class="form-control" name="route_id" value="{{ i.id }}" hidden>
+                                    <select class="form-control" name="route">
+                                        <option value="{{ i.route }}">{{ i.route.destination }}</option>
+                                        <option>---Change Option---</option>
+                                        {% for i in route %}
+                                            <option value="{{ i.id }}">{{ i.destination }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-11">
+                                <div class="form-group">
+                                    <label>Assign Driver</label>
+                                    <select class="form-control" name="driver">
+                                        <option value="{{ i.driver }}">{{ i.user.admin.first_name }}
+                                            &nbsp; {{ i.user.admin.last_name }}</option>
+                                        <option>---Change Option---</option>
+                                        {% for i in driver %}
+                                            <option value="{{ i.id }}">{{ i.admin.first_name }}
+                                                &nbsp; {{ i.admin.last_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                        {% endfor %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

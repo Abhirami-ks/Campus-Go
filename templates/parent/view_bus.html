@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Bus</h3>
+                    <ul class="breadcrumb">
+                        {% comment %} <li class="breadcrumb-item"><a href="{% url 'stu_dashboard' %}">Dashboard</a></li> {% endcomment %}
+                        <li class="breadcrumb-item active">Bus List</li>
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                {% include 'includes/messages.html' %}
+                <div class="card card-table">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="table_id" class="table table-hover table-center mb-0">
+                                <thead>
+                                <tr>
+                                    <th>Bus Number</th>
+                                    <th>Registration Number</th>
+                                    <th>Driver</th>
+                                    <th>Route</th>
+                                    <th>Fees</th>
+                                
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr>
+                                    <td>{{ bus.number }}</td>
+                                    <td>{{ bus.reg_no }}</td>
+                                    <td>{{ bus.driver.admin.first_name }} &nbsp; {{ i.driver.admin.last_name }}</td>
+                                    
+                                     <td>{{ student.route.destination }}</td>
+                                    <td>Rs. {{ student.route.fees }} /-</td>
+                                
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+
+{% endblock %}

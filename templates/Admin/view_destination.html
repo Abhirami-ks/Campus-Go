@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Destination</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'admin_home' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Destination List</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card ">
+                    <div class="card-body ">
+                        <form method="post" action="{% url 'add_destination' %}">
+                            {% csrf_token %}
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Add Destination</span></h5>
+                            </div>
+
+                            <div class="col-sm-11">
+                                <div class="form-group">
+                                    <label>Path</label>
+                                    <input type="text" class="form-control" name="path" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-success">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <br>
+
+        <div class="row">
+            <div class="col-sm-12">
+                {% include 'includes/messages.html' %}
+                <div class="card card-table">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="table_id" class="table table-hover table-center mb-0">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Path</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for i in destination %}
+
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ i.path }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

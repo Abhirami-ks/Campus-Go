@@ -1,0 +1,188 @@
+{% load active_link_tags %}
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            {% if user.user_type == '1' %}
+                <ul>
+                    <li class="menu-title">
+                        <span>Main Menu</span>
+                    </li>
+                    <li>
+                        <a href="{% url 'admin_home' %}"><i class="fas fa-bell"></i>
+                            <span>Dashboard</span></a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'add_notification' %}"><i class="fas fa-bell"></i> <span>Notification</span></a>
+                    </li>
+
+                    <li class="submenu {% active_link 'view_regd_faculty' 'active' %} {% active_link 'view_approved_faculty' 'active' %}">
+                        <a href="#"><i class="fas fa-chalkboard-teacher"></i> <span> Faculty</span> <span
+                                class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'view_regd_faculty' %}">Registered</a></li>
+                            <li><a href="{% url 'view_approved_faculty' %}">Approved</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="submenu {% active_link 'view_regd_driver' 'active' %} {% active_link 'view_approved_driver' 'active' %}">
+                        <a href="#"><i class="fas fa-user-plus"></i> <span> Driver</span> <span
+                                class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'view_regd_driver' %}">Registered</a></li>
+                            <li><a href="{% url 'view_approved_driver' %}">Approved</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'add_destination' %}"><i class="fas fa-map-marked"></i> <span>Destination</span></a>
+                    </li>
+                    
+                    <li>
+                        <a href="{% url 'add_route' %}"><i class="fas fa-map-marked"></i> <span>Route</span></a>
+                    </li>
+
+                    <li class="submenu {% active_link 'view_regd_driver' 'active' %} {% active_link 'view_bus' 'active' %}">
+                        <a href="#"><i class="fas fa-user-plus"></i> <span> Bus</span> <span
+                                class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'add_bus' %}">Add</a></li>
+                            <li><a href="{% url 'view_add_bus' %}">view</a></li>
+                        </ul>
+                    </li>
+
+                
+
+                    <li>
+                        <a href="{% url 'admin_view_payment' %}"><i class="fas fa-dollar-sign"></i>
+                            <span>Payment Info</span></a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'admin_feedback_view' %}"><i class="fas fa-comments"></i> <span>Feedback</span></a>
+                    </li>
+
+
+                    <li>
+                        <a href="{% url 'doLogout' %}"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a>
+                    </li>
+                </ul>
+
+            {% elif user.user_type == '2.1' %}
+                <ul>
+                    <li class="menu-title">
+                        <span>Main Menu</span>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'dashboard' %}"><i class="fas fa-bell"></i>
+                            <span>Dashboard</span></a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'faculty_view_notification' %}"><i class="fas fa-bell"></i>
+                            <span>Notification</span></a>
+                    </li>
+
+                    <li class="submenu {% active_link 'view_regd_students' 'active' %} {% active_link 'view_approved_students' 'active' %}">
+                        <a href="#"><i class="fas fa-user-graduate"></i> <span> Students</span> <span
+                                class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'view_regd_students' %}">Registered</a></li>
+                            <li><a href="{% url 'view_approved_students' %}">Approved</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'inch_view_bus' %}"><i class="fas fa-bus"></i> <span>Route Info</span></a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'faculty_view_feedback' %}"><i class="fas fa-comments"></i>
+                            <span>Feedback</span></a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'doLogout' %}"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a>
+                    </li>
+                </ul>
+
+            {% elif user.user_type == '2' %}
+                <ul>
+                    <li class="menu-title">
+                        <span>Main Menu</span>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'faculty_view_notification' %}"><i class="fas fa-bell"></i>
+                            <span>Notification</span></a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'faculty_view_bus' %}"><i class="fas fa-bus"></i> <span>Route Info</span></a>
+                    </li>
+
+    
+
+                    <li>
+                        <a href="{% url 'faculty_view_feedback' %}"><i class="fas fa-comments"></i>
+                            <span>Feedback</span></a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'doLogout' %}"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a>
+                    </li>
+                </ul>
+
+            {% elif user.user_type == '3' %}
+                <ul>
+                    <li class="menu-title">
+                        <span>Main Menu</span>
+                    </li>
+                    <li>
+                        <a href="{% url 'stu_dashboard' %}"><i class="fas fa-bell"></i>
+                            <span>Dashboard</span></a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'student_view_notification' %}"><i class="fas fa-bell"></i>
+                            <span>Notification</span></a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'student_view_bus' %}"><i class="fas fa-bus"></i> <span>Route Info</span></a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'view_feedback' %}"><i class="fas fa-comments"></i> <span>Feedback</span></a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'doLogout' %}"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a>
+                    </li>
+                </ul>
+        
+
+            {% else %}
+                <ul>
+                    <li class="menu-title">
+                        <span>Main Menu</span>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'driver_view_notification' %}"><i class="fas fa-bell"></i>
+                            <span>Notification</span></a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'driver_view_bus' %}"><i class="fas fa-bus"></i> <span>Route Info</span></a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'doLogout' %}"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a>
+                    </li>
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+</div>

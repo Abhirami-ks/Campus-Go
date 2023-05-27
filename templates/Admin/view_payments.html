@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Payment History</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'admin_home' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Bus List</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                {% include 'includes/messages.html' %}
+                <div class="card card-table">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="table_id" class="table table-hover table-center mb-0">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Payment Date</th>
+                                    <th>Name</th>
+                                    <th>Amount</th>
+                                    <th>Route</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for i in payment %}
+
+                                    <!-- compare with the future date -->
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ i.created_at }}</td>
+                                        {% if i.student == None %}
+                                            <td>{{ i.faculty.admin.first_name }}</td>
+                                        {% else %}
+                                            <td>{{ i.student.admin.first_name }}</td>
+                                        {% endif %}
+                                        <td>Rs. {{ i.route.fees }}</td>
+                                        <td>{{ i.route.destination }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
