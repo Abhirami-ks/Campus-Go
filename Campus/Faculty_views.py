@@ -5,6 +5,7 @@ from django.contrib import messages
 from datetime import datetime, timedelta
 from django.db.models import Q
 from io import BytesIO
+from django.http import HttpResponse
 from django.template.loader import get_template
 import xhtml2pdf.pisa as pisa
 
@@ -100,39 +101,43 @@ def FAC_PAYMENT(request):
 
 def ADD_PAYMENT(request):
     if request.method == "POST":
-        faculty = CustomUser.objects.get(admin=request.user.id)
+        faculty = CustomUser.objects.get(id=request.user.id)
         route_id = faculty.route
-        destination_id = faculty.destination
-        bus = Bus.objects.get(destination=destination_id)
+        current_date = datetime.now()
+
+        paym = {
+            'faculty': faculty,
+            'route': route_id,
+            'current_date': current_date,
+            'status': 'Paid',
+        }
+
         payment = Payment(
-            faculty = faculty,
-            route = route_id,
-            status = 'Paid',
-            bus=bus
+            payee=faculty,
+            route=route_id,
+            status='Paid',
         )
-        paym={
-            'faculty' : faculty,
-            'route' : route_id,
-            'status' : 'Paid',
-            }
-       
-        template1 = get_template('Faculty/reciept.html')
-        html = template1.render(paym)
-        result = BytesIO()
-        # , link_callback=fetch_resources)
-        pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
-        pdf = result.getvalue()
-        filename = 'payment_bill_.pdf'
+
+        template = get_template('Students/reciept.html')
+        html = template.render(paym)
+
+        # Generate PDF using xhtml2pdf
+        pdf = BytesIO()
+        pisa.CreatePDF(BytesIO(html.encode("UTF-8")), pdf)
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="fees.pdf"'
+        response.write(pdf.getvalue())
 
         payment.save()
-        return pdf
-        messages.success(request, "Payment was Succesfull !")
-        return redirect('faculty_view_payment')
+        messages.success(request, "Payment was successful!")
+        return response
+    
 
-    return render(request, 'Faculty/view_payments.html')
+    return render(request, 'Faculty/view_bus.html')
 
 def VIEW_PAYMENT(request):
-    faculty = CustomUser.objects.get(admin=request.user.id)
+    faculty = CustomUser.objects.get(id=request.user.id)
     payment = Payment.objects.filter(faculty=faculty)
     current_date = datetime.now()
     one_month_later = current_date + timedelta(days=30)
@@ -149,11 +154,11 @@ def VIEW_PAYMENT(request):
 # Feedback Modules
 def ADD_FEEDBACK(request):
     if request.method == "POST":
-        user_id = CustomUser.objects.get(admin=request.user.id)
+        user_id = CustomUser.objects.get(id=request.user.id)
         content = request.POST.get('content')
 
         feedback = Feedback(
-            faculty=user_id,
+            feed=user_id,
             content=content,
         )
         feedback.save()
@@ -164,10 +169,10 @@ def ADD_FEEDBACK(request):
 
 
 def VIEW_FEEDBACK(request):
-    users = CustomUser.objects.filter(admin=request.user.id)
+    users = CustomUser.objects.filter(id=request.user.id)
     for i in users:
         user_id = i.id
-        feedback = Feedback.objects.filter(faculty=user_id)
+        feedback = Feedback.objects.filter(feed=user_id)
         context = {
             'feedback': feedback
         }
@@ -190,9 +195,9 @@ def VIEW_NOTIFICATION(request):
     return render(request, 'Faculty/view_notification.html', context)
 # dashboard
 def INCH_DASHBOARD(request):
-    faculty=CustomUser.objects.get(admin=request.user.id)
-    route=faculty.route
-    driver=CustomUser.objects.get(route_id=route)
+    faculty=CustomUser.objects.get(id=request.user.id,user_type = 2.1)
+    destination_id = faculty.destination
+    driver=CustomUser.objects.filter(destination_id=destination_id)
     context={
         'driver':driver
     }
@@ -204,10 +209,36 @@ def FAC_DASHBOARD(request):
 
 def INCH_ROUTE(request):
     faculty=CustomUser.objects.get(id=request.user.id)
-    bus = Bus.objects.filter(inch = faculty)
+    destination_id = faculty.destination
+    bus = Bus.objects.get(destination=destination_id)
+    driverid=Location.objects.get(driver=bus.users)
     context ={
-        'bus':bus
+        'bus':bus,
+        'faculty':faculty,
+        'driverid':driverid
     }
     return render(request, 'Faculty/inch_route.html', context)
 
+def INCH_PAYMENTVIEW(request):
+    inch = CustomUser.objects.get(id=request.user.id, user_type=2.1)
+    bus = Bus.objects.get(inch=inch)
+    users = CustomUser.objects.filter(Q(destination=bus.destination) & (Q(user_type=2) | Q(user_type=3)))
+    payment = Payment.objects.filter(payee__in=users)
 
+    context = {
+        'payment': payment,
+    }
+    return render(request, 'Faculty/inch_viewpayment.html', context)
+
+
+def VIEW_PASSENGER(request):
+    inch = CustomUser.objects.get(id=request.user.id,user_type=2.1)
+    inch_id = inch.id
+    bus = Bus.objects.get(inch=inch_id)
+    destination = bus.destination
+    users=CustomUser.objects.filter(Q(destination=destination) & (Q(user_type=2) | Q(user_type=3)))
+    context = {
+        'users':users,
+        'bus' : bus,
+    }
+    return render (request,'Faculty/passenger.html',context)

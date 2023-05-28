@@ -11,15 +11,15 @@ import json
 # Bus Modules
 def VIEW_BUS(request):
     driver = CustomUser.objects.get(id=request.user.id,user_type=4)
+    driver_id = driver.id
     route_id = driver.route
-    # incharge = Route.objects.get(id=route_id.id)
-    # destination_id = driver.destination
-    #bus = Bus.objects.get(destination=destination_id)
-    students=CustomUser.objects.filter(route=route_id)
+    bus = Bus.objects.get(users=driver_id)
+    destination = bus.destination
+    users=CustomUser.objects.filter(Q(destination=destination) & (Q(user_type=2) | Q(user_type=3)))
     context = {
-        'students':students,
-        'driver': driver
-        # 'incharge': incharge
+        'users':users,
+        'driver': driver,
+        'bus' : bus
     }
 
     return render(request, 'Drivers/view_bus.html', context)
